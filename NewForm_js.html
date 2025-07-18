@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>General Form</title>
+  <style>
+    .table,
+    th,
+    tr { 
+      text-align: center;
+      border: 1px solid black;
+      border-collapse: collapse;
+      color: white;
+      background-color: black;
+
+    }
+
+    tr :hover {
+      background-color: #676767;
+    }
+  </style>
+</head>
+
+<!-- Form Elements begin here  -->
+
+<body>
+  <h1 style="text-align:center">General Form </h1>
+  <div class="Form"
+    style="border: 1px solid black; padding:20px 10px; margin:50px 50px 50px 50px; box-sizing:border-box">
+    <form id="dataform">
+      <label for="name">Name : </label>
+      <input type="text" id="name" name="name" size="50" placeholder="Name" required><br><br>
+      <label for="email">Email : </label>
+      <input type="email" id="email" name="email" size="50" placeholder="Email" required><br><br>
+      <label for="gender"> Gender : </label>
+      <input type="radio" id="gender" name="gender" value="Male" required>
+      <label for="gender">Male </label>
+      <input type="radio" id="gender" name="gender" value="Female">
+      <label for="gender">Female </label><br><br>
+      <label for="hobby">Hobbies : </label>
+      <span id="hobbyError" class="error-msg" style="color: red; font-size: 12px;"></span>
+      <input type="checkbox" id="hobby1" name="hobby" value="Reading">
+      <label for="hobby1">Reading</label>
+      <input type="checkbox" id="hobby2" name="hobby" value="Singing">
+      <label for="hobby2">Singing</label>
+      <input type="checkbox" id="hobby3" name="hobby" value="Dancing">
+      <label for="hobby3">Dancing</label>
+      <input type="checkbox" id="hobby4" name="hobby" value="Playing Games">
+      <label for="hobby4">Playing Games </label><br><br>
+      <label for="country">Country : </label>
+      <select name="country" id="country" required>
+        <option value="" selected="selected">Select Country</option>
+      </select>
+      <span id="countryError" class="error-msg"></span>
+      <br><br>
+      <label for="state">State : </label>
+      <select name="state" id="state" required>
+        <option value="" selected="selected">Select State</option>
+      </select>
+      <span id="stateError" class="error-msg"></span>
+      <br><br>
+      <label for="city">City : </label>
+      <select name="city" id="city" required>
+        <option value="" selected="selected">Select City</option>
+      </select>
+      <span id="cityError" class="error-msg"></span>
+      <br><br>
+      <input type="submit" name="Submit" value="Submit" id="submitBtn">
+      <input type="button" id="updatebtn" value="Update" style="display:none;">
+      <input type="button" id="cancelbtn" value="Cancel" style="display:none;">
+    </form>
+  </div>
+
+  <!-- Table Elements -->
+    <div style="margin: 20px 20px; display: flex; align-items: center; gap: 20px;">
+    <!--  Search and Sort Controls -->
+      <label for="searchInput">Search : </label>
+      <input type="text" id="searchInput" placeholder="Search by name or email"
+        style="padding: 5px 10px; width: 250px; border-radius: 4px; border: 1px solid #ccc;" />
+      <label for="sortSelect">Sort :</label>
+      <select id="sortSelect" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;">
+        <option value=""> Select Order </option>
+        <option value="asc">Ascending </option>
+        <option value="desc">Descending </option>
+      </select>
+    </div>
+
+      <table style="width: 80%;" id="mytable">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>Hobby</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>City</th>
+        <th>Created Time </th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+      <!-- Body element will add here -->
+    </tbody>
+  </table>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+  <script>
+  if (window.jQuery) {
+    console.log("jQuery is loaded: " + $().jquery);
+  } else {
+    console.error("jQuery is NOT loaded!");
+  }
+</script>
+  <script>
+     $(document).ready(function () {
+const initialUsers = [
+      {
+        name: "Rushi",
+        email: "rushi2003@gmail.com",
+        gender: "Male",
+        hobby: "Reading , Singing ",
+        country: "India",
+        state: "Gujarat",
+        city: "Vadodara",
+        createdAt: "20 Aug 2023, 03:30 pm"
+      },
+      {
+        name: "Herin",
+        email: "herin1511@gmail.com",
+        gender: "Male",
+        hobby: "Reading",
+        country: "Germany",
+        state: "Bavaria",
+        city: "Augsburg",
+        createdAt: "21 May 2025, 09:30 pm "
+      }
+    ];
+
+    var Places = {
+      "India": {
+        "Gujarat": ["Surat", "Ahmedabad", "Vadodara", "Bharuch", "Rajkot"],
+        "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane"],
+        "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzzafarpur", "Darbhanga"]
+      },
+      "USA": {
+        "California": ["Los Angeles", "San Diego", "San Jose", "San Francisco", "Fresno"],
+        "Texas": ["Houston", "San Antonio", "Dallas", "Austin", "Fort Worth"],
+        "Florida": ["Jacksonville", "Miami", "Tampa", "Orlando", "St. Petersburg"]
+      },
+      "Germany": {
+        "Bavaria": ["Munich", "Nuremberg", "Regensburg", "Augsburg", "Ingolstadt"],
+        "North Rhine-Westphalia": ["Düsseldorf", "Essen", "Dortmund", "Duisburg", "Bochum"],
+        "Baden-Württemberg": ["Stuttgart", "Karlsruhe", "Mannheim", "Freiburg", "Heidelberg"]
+
+      }
+    }
+
+    // Global variables
+    
+
+    let storageData = [];
+    let editIndex = -1;
+
+      console.log("Document ready");
+      // Populate country dropdown
+      $.each(Places, function (country, states) {
+        $("#country").append(new Option(country, country));
+      });
+
+      // Country change handler
+      $("#country").on("change", function () {
+        $("#state").find("option:gt(0)").remove();
+        $("#city").find("option:gt(0)").remove();
+
+        $("#state").val("");
+        $("#city").val("");
+
+        $("#stateError").hide(); // clear previous messages
+        $("#cityError").hide();
+
+        var selectedCountry = $(this).val();
+        var states = Places[selectedCountry];
+
+        $.each(states, function (state, cities) {
+          $("#state").append(new Option(state, state));
+        });
+      });
+
+      // State change handler
+      $("#state").on("change", function () {
+        $("#city").find("option:gt(0)").remove();
+
+        $("#city").val("");
+        $("#cityError").hide();
+
+        var selectedCountry = $("#country").val();
+        var selectedState = $(this).val();
+        var cities = Places[selectedCountry][selectedState];
+
+        $.each(cities, function (index, city) {
+          $("#city").append(new Option(city, city));
+        });
+      });
+
+      // Hide update and cancel buttons
+      $("#updatebtn").hide();
+      $("#cancelbtn").hide();
+
+      // Add initial users to table and storage
+storageData = [...initialUsers];
+refreshTable();
+
+
+      // Form submit handler
+      $("#dataform").off("submit").on("submit", function (event) {
+         console.log("Form Submitted");
+         console.log("Form submitted at", new Date());
+        event.preventDefault();
+        const name = $("#name").val();
+        const email = $("#email").val();
+        const gender = $('input[name="gender"]:checked').val() || "";
+        const selectedHobbies = $('input[name="hobby"]:checked');
+
+        if (selectedHobbies.length === 0) {
+          $("#hobbyError").text("Please select at least one hobby.").show();
+          return;
+        }
+
+        const hobbies = selectedHobbies.map(function () {
+          return $(this).next("label").text();
+        }).get().join(", ");
+
+        const country = $("#country").val();
+        const state = $("#state").val();
+        const city = $("#city").val();
+
+        const user = {
+          name,
+          email,
+          gender,
+          hobby: hobbies,
+          country,
+          state,
+          city,
+          createdAt: new Date().toLocaleString("en-IN", {
+            day: '2-digit', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+            hour12: true
+          })
+        };
+
+        if (editIndex === -1) {
+          storageData.push(user);
+          refreshTable();
+        }
+
+        this.reset();
+        
+      });
+
+      // Update button handler
+      $("#updatebtn").on("click", function () {
+         
+        $(".error-msg").hide(); // Clear previous messages
+        let isValid = true;
+        console.log("Submit button clicked ");
+        const name = $("#name").val();
+        const email = $("#email").val();
+        const gender = $('input[name="gender"]:checked')?.val() || "";
+        const selectedHobbies = $('input[name="hobby"]:checked');
+        const hobbies = selectedHobbies.map(function () {
+          return $(this).next("label").text();
+        }).get().join(", ");
+        const country = $("#country").val();
+        const state = $("#state").val();
+        const city = $("#city").val();
+
+        // Validate country
+        if (!country) {
+          $("#countryError").text("Please select a country.").show();
+          isValid = false;
+        }
+
+        // Validate state
+        if (!state) {
+          $("#stateError").text("Please select a state.").show();
+          isValid = false;
+        }
+
+        // Validate city
+        if (!city) {
+          $("#cityError").text("Please select a city.").show();
+          isValid = false;
+        }
+
+        // Validate hobbies
+        if (selectedHobbies.length === 0) {
+          $("#hobbyError").text("Please select at least one hobby.").show();
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        const user = {
+          name,
+          email,
+          gender,
+          hobby: hobbies,
+          country,
+          state,
+          city,
+          createdAt: storageData[editIndex].createdAt
+        };
+
+        // Update record
+        if (editIndex !== -1) {
+          storageData[editIndex] = user;
+          refreshTable();
+          resetFormUI();
+        }
+      });
+
+
+      // Cancel button handler
+      $("#cancelbtn").on("click", function () {
+        resetFormUI();
+      });
+
+      // Search functionality
+      $("#searchInput").on("input", function () {
+        const keyword = $(this).val().toLowerCase();
+        const filteredData = storageData.filter(user =>
+          user.name.toLowerCase().includes(keyword) ||
+          user.email.toLowerCase().includes(keyword)
+        );
+        refreshTable(filteredData);
+      });
+
+      // Sort functionality
+      $("#sortSelect").on("change", function () {
+        const order = $(this).val();
+
+        if (order === "asc") {
+          storageData.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (order === "desc") {
+          storageData.sort((a, b) => b.name.localeCompare(a.name));
+        }
+
+        refreshTable();
+      });
+    
+
+    // Functions
+    function addRowToTable(user, index) {
+      const $row = $("<tr></tr>");
+
+      $row.append($("<td></td>").text(user.name));
+      $row.append($("<td></td>").text(user.email));
+      $row.append($("<td></td>").text(user.gender));
+      $row.append($("<td></td>").text(user.hobby));
+      $row.append($("<td></td>").text(user.country));
+      $row.append($("<td></td>").text(user.state));
+      $row.append($("<td></td>").text(user.city));
+      $row.append($("<td></td>").text(user.createdAt));
+
+      const $actionTd = $("<td></td>");
+      const $editBtn = $("<button>Edit</button>").on("click", function () {
+        editUser(index);
+      });
+      const $deleteBtn = $("<button>Delete</button>").on("click", function () {
+        deleteUser(index);
+      });
+
+      $actionTd.append($editBtn, $deleteBtn);
+      $row.append($actionTd);
+      $("#mytable tbody").append($row);
+    }
+
+    function editUser(index) {
+      const user = storageData[index];
+
+      $("#name").val(user.name);
+      $("#email").val(user.email);
+      $(`input[name="gender"][value="${user.gender}"]`).prop("checked", true);
+      $('input[name="hobby"]').prop("checked", false);
+
+      user.hobby.split(", ").forEach(hobby => {
+        $(`input[name="hobby"][value="${hobby}"]`).prop("checked", true);
+      });
+
+      $("#country").val(user.country).trigger("change");
+      setTimeout(() => {
+        $("#state").val(user.state).trigger("change");
+        setTimeout(() => {
+          $("#city").val(user.city);
+        }, 100);
+      }, 100);
+
+      editIndex = index;
+      $("#submitBtn").hide();
+      $("#updatebtn").show();
+      $("#cancelbtn").show();
+    }
+
+    function deleteUser(index) {
+      storageData.splice(index, 1);
+      refreshTable();
+    }
+
+    function refreshTable(data = storageData) {
+      $("#mytable tbody").empty();
+      $.each(data, function (i, user) {
+        addRowToTable(user, i);
+      });
+    }
+
+    function resetFormUI() {
+      $("#dataform")[0].reset();
+      editIndex = -1;
+      $("#submitBtn").show();
+      $("#updatebtn").hide();
+      $("#cancelbtn").hide();
+    }
+  });
+  </script>
+</body>
+
+</html>
