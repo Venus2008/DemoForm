@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>General Form</title>
+  <style>
+    .table,
+    th,
+    tr {
+      text-align: center;
+      border: 1px solid black;
+      border-collapse: collapse;
+      color: white;
+      background-color: black;
+
+    }
+
+    tr :hover {
+      background-color: #676767;
+    }
+  </style>
+</head>
+  
+<!-- Form Elements begin here  -->
+
+<body>
+  <h1 style="text-align:center">General Form </h1>
+  <div class="Form"
+    style="border: 1px solid black; padding:20px 10px; margin:50px 50px 50px 50px; box-sizing:border-box">
+    <form id="dataform">
+      <label for="name">Name : </label>
+      <input type="text" id="name" name="name" size="50" placeholder="Name" required><br><br>
+      <label for="email">Email : </label>
+      <input type="email" id="email" name="email" size="50" placeholder="Email" required><br><br>
+      <label for="gender"> Gender : </label>
+      <input type="radio" id="gender" name="gender" value="Male" required>
+      <label for="gender">Male </label>
+      <input type="radio" id="gender" name="gender" value="Female">
+      <label for="gender">Female </label><br><br>
+      <label for="hobby" >Hobbies : </label>
+      <input type="checkbox" id="hobby1" name="hobby" value="Reading" >
+      <label for="hobby1">Reading</label>
+      <input type="checkbox" id="hobby2" name="hobby" value="Singing">
+      <label for="hobby2">Singing</label>
+      <input type="checkbox" id="hobby3" name="hobby" value="Dancing">
+      <label for="hobby3">Dancing</label>
+      <input type="checkbox" id="hobby4" name="hobby" value="Playing Games">
+      <label for="hobby4">Playing Games </label><br><br>
+      <label for="country">Country : </label>
+      <select name="country" id="country" required>
+        <option value="" selected="selected">Select Country</option>
+      </select>
+      <br><br>
+      <label for="state">State : </label>
+      <select name="state" id="state" required>
+        <option value="" selected="selected">Select State</option>
+      </select>
+      <br><br>
+      <label for="city">City : </label>
+      <select name="city" id="city" required>
+        <option value="" selected="selected">Select City</option>
+
+        <!-- Buttons element -->
+      </select>
+      <br><br>
+      <input type="submit" name="Submit" value="Submit" id="submitBtn">
+      <input type="button" id="updatebtn" value="Update" style="display:none;">
+      <input type="button" id="cancelbtn" value="Cancel" style="display:none;">
+    </form>
+  </div>
+
+  <!-- Table Elements -->
+  
+  <table style="width: 80%;" id="mytable">
+    <!--  Search and Sort Controls -->
+    <div style="margin: 20px 20px; display: flex; align-items: center; gap: 20px;">
+      <label for="searchInput">Search : </label>
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search by name or email"
+        style="padding: 5px 10px; width: 250px; border-radius: 4px; border: 1px solid #ccc;" 
+      />
+
+      <label for="sortSelect">Sort :</label>
+      <select 
+        id="sortSelect" 
+        style="padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;">
+        <option value=""> Select Order </option>
+        <option value="asc">Ascending </option>
+        <option value="desc">Descending </option>
+      </select>
+    </div>
+
+    <tr>
+      <thead>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>Hobby</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>City</th>
+        <th>Created Time </th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+      <!-- Body element will add here -->
+
+    </tbody>
+  </table>
+  <script>
+    var Places = {
+      "India": {
+        "Gujarat": ["Surat", "Ahmedabad", "Vadodara", "Bharuch", "Rajkot"],
+        "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane"],
+        "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzzafarpur", "Darbhanga"]
+      },
+      "USA": {
+        "California": ["Los Angeles", "San Diego", "San Jose", "San Francisco", "Fresno"],
+        "Texas": ["Houston", "San Antonio", "Dallas", "Austin", "Fort Worth"],
+        "Florida": ["Jacksonville", "Miami", "Tampa", "Orlando", "St. Petersburg"]
+      },
+      "Germany": {
+        "Bavaria": ["Munich", "Nuremberg", "Regensburg", "Augsburg", "Ingolstadt"],
+        "North Rhine-Westphalia": ["Düsseldorf", "Essen", "Dortmund", "Duisburg", "Bochum"],
+        "Baden-Württemberg": ["Stuttgart", "Karlsruhe", "Mannheim", "Freiburg", "Heidelberg"]
+
+      }
+    }
+
+    window.onload = function () {
+      var countryselect = document.getElementById("country");
+      var stateselect = document.getElementById("state");
+      var cityselect = document.getElementById("city");
+      for (var x in Places) {
+        countryselect.options[countryselect.options.length] = new Option(x, x);
+      }
+      countryselect.onchange = function () {
+        stateselect.length = 1;
+        cityselect.length = 1;
+        for (var y in Places[this.value]) {
+          stateselect.options[stateselect.options.length] = new Option(y, y);
+        }
+      }
+      
+      stateselect.onchange = function () {
+        cityselect.length = 1;
+        var z = Places[countryselect.value][this.value];
+        for (var i = 0; i < z.length; i++) {
+          cityselect.options[cityselect.options.length] = new Option(z[i], z[i]);
+        }
+      };
+      document.getElementById("updatebtn").style.display = "none";
+      document.getElementById("cancelbtn").style.display = "none";
+      
+      // Add initial users to table and storage
+      for (let i = 0; i < initialUsers.length; i++) {
+        storageData.push(initialUsers[i]);
+        addRowToTable(initialUsers[i], i);
+      }
+    };
+
+    const form = document.getElementById("dataform");
+    const tablebody = document.getElementById("mytable").getElementsByTagName("tbody")[0];
+    const initialUsers = [
+
+      // Constant Arrays 
+
+      {
+        name: "Niyati",
+        email: "niyati2004@gmail.com",
+        gender: "Female",
+        hobby: "Reading , Singing ",
+        country: "India",
+        state: "Maharashtra",
+        city: "Pune",
+        createdAt: "13 Nov 2025, 03:30 pm"
+    },
+    {
+        name: "Venus",
+        email: "venus2003@gmail.com",
+        gender: "Male",
+        hobby: "Reading",
+        country: "India",
+        state: "Gujarat",
+        city: "Surat",
+        createdAt: "21 May 2025, 09:30 pm "
+      }
+    ];
+
+    // Data storage
+    let storageData = [];
+    let editIndex = -1;
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+      const hobbies = Array.from(document.querySelectorAll('input[name="hobby"]:checked') ).map(cb => cb.nextElementSibling.textContent).join(", ") ;
+      const country = document.getElementById("country").value;
+      const state = document.getElementById("state").value;
+      const city = document.getElementById("city").value;
+      
+      if (!hobbies || hobbies === "") {
+    return;
+  }
+      
+      
+      const user = {
+        name,
+        email,
+        gender,
+        hobby: hobbies,
+        country,
+        state,
+        city,
+        createdAt: new Date().toLocaleString("en-IN", {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+          hour12: true
+        })
+
+      };
+
+      if (editIndex === -1) {
+        storageData.push(user);                                // Store in array
+        addRowToTable(user, storageData.length - 1);           // Add row to table
+      }
+
+      form.reset();  // Clear form
+    });
+
+    document.getElementById("updatebtn").addEventListener("click", function () {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+      const hobbies = Array.from(document.querySelectorAll('input[name="hobby"]:checked')).map(cb => cb.nextElementSibling.textContent).join(", ");
+      const country = document.getElementById("country").value;
+      const state = document.getElementById("state").value;
+      const city = document.getElementById("city").value
+
+      if (!hobbies || hobbies === "") {
+    return;
+  }
+
+      if (!country || country === "Select Country") {
+    return;
+  }
+
+  if (!state || state === "Select State") {
+    return;
+  }
+
+  if (!city || city === "Select City") {
+    return;
+  }
+
+      const user = {
+        name,
+        email,
+        gender,
+        hobby: hobbies,
+        country,
+        state,
+        city,
+        createdAt: new Date().toLocaleString("en-IN", {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+          hour12: true
+        })
+
+      };
+
+      
+      if (editIndex !== -1) {
+        storageData[editIndex] = user;
+        refreshTable();
+        resetFormUI();
+      }
+    });
+
+    document.getElementById("cancelbtn").addEventListener("click", function () {
+      resetFormUI();
+    });
+
+    // Search Bar 
+    
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const keyword = this.value.toLowerCase();
+      const filteredData = storageData.filter(user =>
+        user.name.toLowerCase().includes(keyword) ||
+        user.email.toLowerCase().includes(keyword)
+      );
+      refreshTable(filteredData); // Refresh only filtered results
+    });
+
+    // Sort Functionality 
+    
+    document.getElementById("sortSelect").addEventListener("change", function () {
+      const order = this.value;
+      if (order === "asc") {
+        storageData.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (order === "desc") {
+        storageData.sort((a, b) => b.name.localeCompare(a.name));
+      }
+      refreshTable(); // Refresh full table with new sort
+    });
+
+    // Add new rows 
+    function addRowToTable(user, index) {
+      const newRow = tablebody.insertRow();
+
+      newRow.insertCell(0).textContent = user.name;
+      newRow.insertCell(1).textContent = user.email;
+      newRow.insertCell(2).textContent = user.gender;
+      newRow.insertCell(3).textContent = user.hobby;
+      newRow.insertCell(4).textContent = user.country;
+      newRow.insertCell(5).textContent = user.state;
+      newRow.insertCell(6).textContent = user.city;
+      newRow.insertCell(7).textContent = user.createdAt;
+      newRow.insertCell(8).textContent = user.actionCell;
+
+
+      const actionCell = newRow.insertCell(8);
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = function () {
+        editUser(index);
+      };
+
+
+
+      
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = function () {
+        deleteUser(index);
+      };
+
+      actionCell.appendChild(editBtn);
+      actionCell.appendChild(deleteBtn);
+    }
+
+    function editUser(index) {
+      const user = storageData[index];
+
+      document.getElementById("name").value = user.name;
+      document.getElementById("email").value = user.email;
+      document.querySelector(`input[name="gender"][value="${user.gender}"]`).checked = true;
+
+      document.querySelectorAll('input[name="hobby"]').forEach(cb => cb.checked = false);
+      user.hobby.split(", ").forEach(hobby => {
+        const checkbox = Array.from(document.querySelectorAll('input[name="hobby"]')).find(cb => cb.value === hobby);
+        if (checkbox) checkbox.checked = true;
+      });
+
+      // Form Drop Down 
+
+      document.getElementById("country").value = user.country;
+      document.getElementById("country").onchange();
+      setTimeout(()=>{ 
+
+      document.getElementById("state").value = user.state;
+      document.getElementById("state").onchange();
+
+      setTimeout(()=>{
+      document.getElementById("city").value = user.city;
+      },50 );
+    },50 );
+      editIndex = index;
+      document.getElementById("submitBtn").style.display = "none";
+      document.getElementById("updatebtn").style.display = "inline";
+      document.getElementById("cancelbtn").style.display = "inline";
+    };
+
+    // Delet Button
+    function deleteUser(index) {
+      storageData.splice(index, 1);
+      tablebody.deleteRow(index);
+      refreshTable();
+    }
+
+    // Refresh 
+    function refreshTable(data = storageData) {
+      tablebody.innerHTML = "";
+      data.forEach((user, i) => {
+        addRowToTable(user, i);
+      });
+    }
+    
+function resetFormUI() {
+      form.reset();
+      editIndex = -1;
+
+      document.getElementById("submitBtn").style.display = "inline";
+      document.getElementById("updatebtn").style.display = "none";
+      document.getElementById("cancelbtn").style.display = "none";
+    }
+  </script>
+</body>
+</html>
